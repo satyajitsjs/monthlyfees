@@ -131,10 +131,10 @@
                                 // Handle the payment success or failure and redirect accordingly
                                 if (response.razorpay_payment_id) {
                                     // Payment successful, redirect to the success URL
-                                    window.location.href = "/payment-success/";
+                                    alert("success")
                                 } else {
                                     // Payment failed or canceled, redirect to the failure URL
-                                    window.location.href = "/payment-failed/";
+                                    alert("Erro")
                                 }
                             },
                             prefill: {
