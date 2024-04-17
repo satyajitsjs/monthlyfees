@@ -1,0 +1,118 @@
+<!-- edit_institute.html -->
+
+{% extends "admin_panel/admin_dashboard.html" %}
+
+{% block content %}
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="pe-7s-notebook icon-gradient bg-mean-fruit"></i>
+                        </div>
+                        <div>Edit Institute</div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <h5 class="card-title">Edit Institute Details</h5>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <!-- Populate form fields with institute details -->
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" value="{{ institute.name }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location:</label>
+                            <input type="text" id="location" name="location" value="{{ institute.location }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact_number">Contact Number:</label>
+                            <input type="text" id="contact_number" name="contact_number" value="{{ institute.contact_number }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="change_image">Change Image:</label>
+                            <input type="file" id="change_image" name="change_image" accept="image/*" class="form-control-file">
+                            {% if institute.image %}
+                                <img src="{{ institute.image.url }}" alt="{{ institute.name }}" style="max-width: 100px; max-height: 100px; margin-top: 5px;">
+                            {% else %}
+                                <span>No image available</span>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="current_password">Current Password:</label>
+                            <div class="input-group">
+                                <input type="password" id="current_password" name="current_password" value="{{ institute.admin_password }}" class="form-control">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="toggle-password">Show Password</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="new_password">New Password:</label>
+                            <div class="input-group">
+                                <input type="password" id="new_password" name="new_password" class="form-control">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="toggle-new-password">Show Password</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Add other form fields as needed -->
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <a href="{% url 'institute_list' %}" class="btn btn-secondary">Back</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("toggle-password").addEventListener("click", function () {
+        var passwordInput = document.getElementById("current_password");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            this.textContent = "Hide Password";
+        } else {
+            passwordInput.type = "password";
+            this.textContent = "Show Password";
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% if messages %}
+            {% for message in messages %}
+                {% with alert_type=message.tags %}
+                    {% if not alert_type %}{% with alert_type='info' %}{% endwith %}{% endif %}
+                    Swal.fire({
+                        icon: '{{ alert_type }}',
+                        title: '{{ message }}',
+                        showConfirmButton: false,
+                        timer: 2000  // Set the timer to 2000 milliseconds (2 seconds)
+                    });
+                {% endwith %}
+            {% endfor %}
+        {% endif %}
+    });
+</script>
+<script>
+    document.getElementById("toggle-new-password").addEventListener("click", function () {
+        var passwordInput = document.getElementById("new_password");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            this.textContent = "Hide Password";
+        } else {
+            passwordInput.type = "password";
+            this.textContent = "Show Password";
+        }
+    });
+</script>
+{% endblock content %}

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Add your meta tags, title, and styles here -->
+    <style>
+        body {
+            background-color: #fafafa;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+    
+        .login-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 800px; /* Adjusted max-width */
+        }
+    
+        .panel-select-account {
+            padding: 30px; /* Adjusted padding */
+            text-align: center;
+        }
+    
+        h1 {
+            margin: 0 0 15px; /* Adjusted margin */
+            font-size: 28px; /* Adjusted font-size */
+            font-weight: bold;
+            color: #333;
+        }
+    
+        p {
+            margin: 0 0 30px; /* Adjusted margin */
+            font-size: 18px; /* Adjusted font-size */
+            color: #666;
+        }
+    
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px; /* Adjusted padding */
+        }
+    
+        .custom-radio-login {
+            flex: 1;
+            text-align: center;
+        }
+    
+        input[type="radio"] {
+            display: none;
+        }
+    
+        label {
+            cursor: pointer;
+            display: block;
+            padding: 30px; /* Adjusted padding */
+            border-radius: 8px;
+            box-shadow: 0 0 0 2px transparent;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+    
+        label:hover {
+            background-color: #f5f5f5;
+        }
+    
+        input[type="radio"]:checked+label {
+            box-shadow: 0 0 0 2px #007bff;
+            background-color: #f0f8ff;
+        }
+    
+        .user-icon {
+            width: 120px; /* Adjusted icon size */
+            height: 120px; /* Adjusted icon size */
+            margin-bottom: 15px; /* Adjusted margin */
+        }
+    
+        h5 {
+            margin: 0;
+            font-size: 18px; /* Adjusted font-size */
+        }
+    
+        .admin-radio label {
+            color: #007bff;
+        }
+    
+        .manager-radio label {
+            color: #28a745;
+        }
+    
+        .employee-radio label {
+            color: #17a2b8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row login-container">
+            <div class="col-12 col-md-9 m-auto">
+                <div class="bg-white rounded">
+                    <div class="panel-select-account p-4 p-lg-5">
+                        <h1 class="d-block text-center mb-0 font-weight-bold">Vidya Bhaban Management System</h1>
+                        <p class="lead text-center mb-4">Welcome, select your account type.</p>
+                        <div class="form-row">
+                            <div class="col-12 col-md-4 text-center">
+                                <div class="custom-radio-login admin-radio">
+                                    <input type="radio" id="admin" name="customRadio">
+                                    <label class="d-block p-4 p-xl-5 border rounded mb-0" for="admin" onclick="window.location.href='{% url 'admin_login' %}'">
+                                        <svg version="1.1" class="user-icon" xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512"
+                                            style="enable-background: new 0 0 512 512;" xml:space="preserve" width="75px"
+                                            height="75px">
+                                            <!-- Admin icon path -->
+                                            <path style="fill:#007bff;"
+                                                d="M273.88,229.95c47.62-7.29,86.54-46.22,93.84-93.84c11.7-76.42-53.17-141.3-129.6-129.59c-47.62,7.29-86.54,46.21-93.84,93.84C132.58,176.77,197.46,241.65,273.88,229.95zM258.75,390.81c8.87,0,16.09-7.22,16.09-16.09s-7.22-16.09-16.09-16.09c-8.87,0-16.09,7.22-16.09,16.09S249.88,390.81,258.75,390.81zM251.22,345.17h56.85c2.16,0,4.25-0.91,5.73-2.48c1.48-1.58,2.25-3.72,2.11-5.88c-0.27-4.12-3.74-7.34-7.91-7.34h-56.77c-2.11,0-4.08,0.83-5.56,2.33c-1.45,1.48-2.25,3.43-2.25,5.54c0,2.08,0.8,4.03,2.25,5.51C247.15,344.35,249.12,345.17,251.22,345.17zM217.34,353.41c8.87,0,16.09-7.22,16.09-16.09s-7.22-16.09-16.09-16.09s-16.09,7.22-16.09,16.09S208.47,353.41,217.34,353.41zM308,366.87h-15.36c-2.08,0-4.04,0.81-5.51,2.29c-1.48,1.48-2.29,3.45-2.29,5.58c0,2.1,0.81,4.07,2.29,5.55c1.47,1.47,3.43,2.29,5.51,2.29h15.44c2.16,0,4.25-0.91,5.73-2.48c1.48-1.58,2.25-3.72,2.11-5.88C315.64,370.09,312.17,366.87,308,366.87zM379.07,234.64c-9.47-3.59-20.57-2.11-28.25,4.49c-24.07,20.7-58.2,33.57-94.83,33.74c-36.63-0.17-70.76-13.04-94.83-33.74c-7.68-6.6-18.78-8.08-28.25-4.49C70.51,258.3,10.38,378.81,58.39,451.26c38.54,58.16,122.38,55.58,197.61,55.58c75.23,0,159.08,2.58,197.61-55.58C501.62,378.81,441.49,258.3,379.07,234.64zM331.77,395.01c-13.59,44.06-47.46,72.11-63.85,83.54c-5.51,3.85-12.82,3.85-18.33,0c-16.39-11.44-50.26-39.48-63.85-83.54c-5.31-17.24-6.66-48.52-6.98-66.15c-0.14-7.55,5.04-14.16,12.4-15.85l64.01-14.7c2.35-0.54,4.8-0.54,7.15,0l64.02,14.7c7.36,1.69,12.54,8.3,12.41,15.85C338.42,346.49,337.08,377.77,331.77,395.01zM300.16,396.02c-8.87,0-16.09,7.22-16.09,16.09s7.22,16.09,16.09,16.09s16.09-7.22,16.09-16.09S309.03,396.02,300.16,396.02zM209.5,366.87c-4.17,0-7.64,3.23-7.91,7.34c-0.14,2.16,0.63,4.3,2.11,5.88c1.48,1.58,3.57,2.48,5.73,2.48h15.44c2.11,0,4.08-0.83,5.56-2.33c1.45-1.48,2.25-3.43,2.25-5.54c0-2.08-0.8-4.03-2.25-5.51c-1.48-1.5-3.45-2.33-5.56-2.33H209.5zM267.06,404.26H209.5c-4.17,0-7.64,3.23-7.91,7.34c-0.14,2.16,0.63,4.3,2.11,5.88c1.48,1.58,3.57,2.48,5.73,2.48h57.63c2.11,0,4.08-0.83,5.56-2.33c1.45-1.47,2.25-3.43,2.25-5.54c0-2.07-0.8-4.03-2.25-5.51C271.14,405.09,269.16,404.26,267.06,404.26z">
+                                            </path>
+                                        </svg>
+                                        <h5 class="mb-0 mt-2" style="color:#007bff">Admin</h5>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 text-center">
+                                <div class="custom-radio-login manager-radio">
+                                    <input type="radio" id="manager" name="customRadio3">
+                                    <label class="d-block p-4 p-xl-5 border rounded mb-0" for="manager" onclick="window.location.href='{% url 'institute_login' %}'">
+                                        <svg version="1.1" class="user-icon" xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512"
+                                            style="enable-background: new 0 0 512 512;" width="75px" height="75px"
+                                            xml:space="preserve">
+                                            <!-- Manager icon path -->
+                                            <ellipse transform="matrix(0.7071 -0.7071 0.7071 0.7071 -8.6216 215.6485)"
+                                                cx="256" cy="118.23" rx="112.62" style="fill:#28a745"
+                                                ry="113.41"></ellipse>
+                                            <path style="fill:#28a745"
+                                                d="M379.07,234.64L379.07,234.64c-3.99-1.51-8.45,0.42-10.09,4.35l-60.92,145.96c-2.88,6.89-12.79,6.44-15.03-0.68l-17.32-55.08c-1.44-4.59-0.6-9.6,2.28-13.46l12.66-17.01c4.99-6.7,3.54-16.19-3.22-21.1l-22.63-16.42c-5.25-3.81-12.36-3.81-17.62,0l-22.63,16.42c-6.76,4.91-8.21,14.4-3.22,21.1l12.66,17.01c2.87,3.86,3.72,8.87,2.28,13.46l-17.32,55.08c-2.24,7.12-12.15,7.57-15.03,0.68l-60.92-145.96c-1.64-3.93-6.11-5.86-10.09-4.35l0,0C70.51,258.3,10.38,378.81,58.39,451.26c38.54,58.16,122.38,55.58,197.61,55.58c75.23,0,159.08,2.58,197.61-55.58C501.62,378.81,441.49,258.3,379.07,234.64z"></path>
+                                        </svg>
+                                        <h5 class="mb-0 mt-2" style="color:#28a745">Institue</h5>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 text-center">
+                                <div class="custom-radio-login employee-radio">
+                                    <input type="radio" id="employee" name="customRadio2">
+                                    <label class="d-block p-4 p-xl-5 border rounded mb-0" for="employee" onclick="window.location.href='#'">
+                                        <svg version="1.1" class="user-icon" xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512"
+                                            style="enable-background: new 0 0 512 512;" xml:space="preserve" width="75px"
+                                            height="75px">
+                                            
+                                            <path style="fill:#17a2b8" d="M379.07,234.64c-9.47-3.59-20.57-2.11-28.25,4.49c-24.07,20.7-58.2,33.57-94.83,33.74c-36.63-0.17-70.76-13.04-94.83-33.74c-7.68-6.6-18.78-8.08-28.25-4.49C70.51,258.3,10.38,378.81,58.39,451.26c38.54,58.16,122.38,55.58,197.61,55.58c75.23,0,159.08,2.58,197.61-55.58C501.62,378.81,441.49,258.3,379.07,234.64z M273.88,229.95c47.62-7.29,86.54-46.22,93.84-93.84c11.7-76.42-53.17-141.3-129.6-129.59c-47.62,7.29-86.54,46.21-93.84,93.84C132.58,176.77,197.46,241.65,273.88,229.95z"></path>
+                                        </svg>
+                                        <h5 class="mb-0 mt-2" style="color:#17a2b8">CCO/VPO/CP</h5>
+
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

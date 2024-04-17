@@ -1,0 +1,73 @@
+{% extends "admin_panel/admin_dashboard.html" %}
+
+{% block content %}
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="pe-7s-add-user icon-gradient bg-mean-fruit"></i>
+                        </div>
+                        <div>Add Institute</div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id">ID:</label>
+                            <input type="text" id="id" name="id" value="{{ institute.id }}" {% if disable_id %}disabled{% endif %} class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location:</label>
+                            <input type="text" id="location" name="location" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact_number">Contact Number:</label>
+                            <input type="text" id="contact_number" name="contact_number" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Image:</label>
+                            <input type="file" id="image" name="image" accept="image/*" required class="form-control-file">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" required class="form-control">
+                        </div>
+                        <button type="submit" class="mt-1 btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% if messages %}
+            {% for message in messages %}
+                {% with alert_type=message.tags %}
+                    {% if not alert_type %}{% with alert_type='info' %}{% endwith %}{% endif %}
+                    Swal.fire({
+                        icon: '{{ alert_type }}',
+                        title: '{{ message }}',
+                        showConfirmButton: false,
+                        timer: 2000  // Set the timer to 2000 milliseconds (2 seconds)
+                    });
+                {% endwith %}
+            {% endfor %}
+        {% endif %}
+    });
+</script>
+
+
+{% endblock content %}

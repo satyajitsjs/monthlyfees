@@ -1,0 +1,36 @@
+<!-- view_institute.html -->
+
+{% extends "admin_panel/admin_dashboard.html" %}
+
+{% block content %}
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="pe-7s-notebook icon-gradient bg-mean-fruit"></i>
+                        </div>
+                        <div>View Institute</div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <h5 class="card-title">Institute Details</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">ID: {{ institute.id }}</li>
+                        <li class="list-group-item">Name: {{ institute.name }}</li>
+                        <li class="list-group-item">Location: {{ institute.location }}</li>
+                        <li class="list-group-item">Contact Number: {{ institute.contact_number }}</li>
+                        <li class="list-group-item">Image: <img src="{{ institute.image.url }}" alt="{{ institute.name }}" style="max-width: 100px; max-height: 100px;"></li>
+                    </ul>
+                </div>
+                
+            </div>
+            <a href="{% url 'institute_list' %}" class="btn btn-primary btn-lg">Back</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

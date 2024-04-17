@@ -1,0 +1,70 @@
+{% extends "admin_panel/admin_dashboard.html" %}
+
+{% block content %}
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="pe-7s-notebook icon-gradient bg-mean-fruit"></i>
+                        </div>
+                        <div>Institute List</div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="institute-table" class="mb-0 table table-striped table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Contact Number</th>
+                                    <th>Image</th>
+                                    <th>Actions</th> <!-- New column for action buttons -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for institute in institutes %}
+                                <tr>
+                                    <td>{{ institute.id }}</td>
+                                    <td>{{ institute.name }}</td>
+                                    <td>{{ institute.location }}</td>
+                                    <td>{{ institute.contact_number }}</td>
+                                    <td><img src="{{ institute.image.url }}" alt="{{ institute.name }}" style="max-width: 50px; max-height: 50px;"></td>
+                                    <td>
+                                        <a href="{% url 'view_institute' institute.id %}" class="btn btn-info btn-sm">View</a>
+                                        <a href="{% url 'edit_institute' institute.id %}" class="btn btn-primary btn-sm">Edit</a>
+                                        <!-- Direct deletion link with success message -->
+                                        <a href="{% url 'delete_institute' institute.id %}?success_message=Institute '{{ institute.name }}' has been deleted successfully." class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+<script>
+    $(document).ready(function() {
+        $('#institute-table').DataTable({
+            "dom": '<"dt-buttons"Bf><"clear">lirtp',
+            "paging": true,
+            "autoWidth": true,
+        });
+    });
+</script>
+
+{% endblock content %}

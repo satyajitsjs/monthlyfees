@@ -1,0 +1,103 @@
+{% extends "admin_panel/admin_dashboard.html" %}
+{% block content %}
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="pe-7s-notebook icon-gradient bg-mean-fruit"></i>
+                        </div>
+                        <div>Edit Student</div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <h5 class="card-title">Edit Student Details</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        <!-- Populate form fields with student details -->
+                        <div class="form-group">
+                            <label for="admission_number">Admission Number:</label>
+                            <input type="text" id="admission_number" name="admission_number" value="{{ student.admission_number }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="admission_date">Admission Date:</label>
+                            <!-- Update the input type to 'text' and use a placeholder -->
+                            <input type="date" id="admission_date" name="admission_date" value="{{ student.admission_date|date:'Y-m-d' }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="student_name">Student Name:</label>
+                            <input type="text" id="student_name" name="student_name" value="{{ student.name }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="class">Class:</label>
+                            <select id="class" name="class" class="form-control">
+                                {% for class_name in classes %}
+                                    <option value="{{ class_name }}" {% if student.student_class == class_name %} selected {% endif %}>{{ class_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="section">Section:</label>
+                            <input type="text" id="section" name="section" value="{{ student.section }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="course">Course:</label>
+                            <select id="course" name="course" class="form-control">
+                                {% for course in courses %}
+                                    <option value="{{ course }}" {% if student.course == course %} selected {% endif %}>{{ course }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact_number">Contact Number:</label>
+                            <input type="text" id="contact_number" name="contact_number" value="{{ student.contact_number }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender:</label>
+                            <select id="gender" name="gender" class="form-control">
+                                <option value="Male" {% if student.gender == 'Male' %} selected {% endif %}>Male</option>
+                                <option value="Female" {% if student.gender == 'Female' %} selected {% endif %}>Female</option>
+                                <option value="Other" {% if student.gender == 'Other' %} selected {% endif %}>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="fee_amount">Course Fee:</label>
+                            <input type="text" id="fee_amount" name="fee_amount" value="{{ student.course_fee.fee_amount }}" class="form-control">
+                        </div>
+                        <!-- Add other form fields as needed -->
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <a href="{% url 'view_student_list' institute_id=student.institute_id %}" class="btn btn-secondary">Back</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('#class, #course').change(function(){
+        var selected_class = $('#class').val();
+        var selected_course = $('#course').val();
+        
+        $.ajax({
+            url: '{% url 'get_fee_amount' %}',
+            type: 'GET',
+            data: {'class': selected_class, 'course': selected_course},
+            success: function(response){
+                $('#fee_amount').val(response.fee_amount);
+            },
+            error: function(xhr, errmsg, err){
+                console.log(xhr.status + ": " + xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+
+{% endblock content %}

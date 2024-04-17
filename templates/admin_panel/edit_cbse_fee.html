@@ -1,0 +1,48 @@
+{% extends "admin_panel/admin_dashboard.html" %}
+
+{% block content %}
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="pe-7s-cash icon-gradient bg-mean-fruit"></i>
+                        </div>
+                        <div>Edit CBSE Fees</div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="fee_amount">Fee Amount:</label>
+                            <input type="text" id="fee_amount" name="fee_amount" value="{{ fee.fee_amount }}" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="class_name">Class:</label>
+                            <select id="class_name" name="class_name" class="form-control" disabled>
+                                {% for class_option in class_options %}
+                                    <option value="{{ class_option }}" {% if class_option == fee.class_name %}selected{% endif %}>{{ class_option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="course">Course:</label>
+                            <select id="course" name="course" class="form-control" disabled>
+                                <option value="CBSE">CBSE</option>
+                            </select>
+                        </div>
+                        <!-- Add other form fields as needed -->
+                        <button type="submit" class="mt-1 btn btn-primary">Submit</button>
+                        <a href="{% url 'view_cbse_fees' %}" class="mt-1 btn btn-secondary">Back</a> <!-- Add the back button -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

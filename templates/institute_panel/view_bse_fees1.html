@@ -1,0 +1,63 @@
+{% extends "institute_panel/institute_dashboard.html" %}
+
+{% block content %}
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="pe-7s-cash icon-gradient bg-mean-fruit"></i>
+                        </div>
+                        <div>BSE Fees List</div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="bse-fees-table" class="mb-0 table table-striped table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Class</th>
+                                    <th>Course</th>
+                                    <th>Fee Amount</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for fee in bse_fees %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ fee.class_name }}</td>
+                                    <td>{{ fee.course }}</td>
+                                    <td>{{ fee.fee_amount }}</td>
+                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+<script>
+    $(document).ready(function() {
+        $('#bse-fees-table').DataTable({
+            "dom": '<"dt-buttons"Bf><"clear">lirtp',
+            "paging": true,
+            "autoWidth": true,
+        });
+    });
+</script>
+
+{% endblock content %}

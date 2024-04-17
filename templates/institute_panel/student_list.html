@@ -1,0 +1,157 @@
+{% extends "institute_panel/institute_dashboard.html" %} {% block content %}
+<div class="app-main">
+  <div class="app-main__outer">
+    <div class="app-main__inner">
+      <div class="app-page-title">
+        <div class="page-title-wrapper">
+          <div class="page-title-heading">
+            <div class="page-title-icon">
+              <i class="pe-7s-notebook icon-gradient bg-mean-fruit"></i>
+            </div>
+            <div>Student List</div>
+          </div>
+        </div>
+      </div>
+      <div class="main-card mb-3 card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table
+              id="student-table"
+              class="mb-0 table table-striped table-bordered"
+              cellspacing="0"
+              width="100%"
+            >
+              <thead>
+                <tr>
+                  <th>Sl No.</th>
+                  <th>Admission Number</th>
+                  <th>Admission Date</th>
+                  <th>Name</th>
+                  <th>Class</th>
+                  <th>Section</th>
+                  <th>Course</th>
+                  <th>Fees</th>
+                  <th>Actions</th>
+                  <!-- New column for action buttons -->
+                </tr>
+              </thead>
+              <tbody>
+                {% for student in students %}
+                <tr>
+                  <td>{{forloop.counter}}</td>
+                  <td>{{ student.admission_number }}</td>
+                  <td>{{ student.admission_date }}</td>
+                  <td>{{ student.name }}</td>
+                  <td>{{ student.student_class }}</td>
+                  <td>{{ student.section }}</td>
+                  <td>{{ student.course }}</td>
+                  <td id="amount-{{ student.pk }}">{{ student.course_fee.fee_amount }}</td>
+                  <td>
+                    <a
+                      href="{% url 'view_student1' student.pk %}"
+                      class="btn btn-info btn-sm"
+                      >View</a
+                    >
+                    <a
+                      href="{% url 'edit_student1' student.pk %}"
+                      class="btn btn-primary btn-sm"
+                      >Edit</a
+                    >
+                    <!-- Direct deletion link with success message -->
+                    <a
+                      href="{% url 'delete_student1' student.pk %}?success_message=Student '{{ student.name }}' has been deleted successfully."
+                      class="btn btn-danger btn-sm"
+                      >Delete</a
+                    >
+                    <button
+                      class="btn btn-success btn-sm pay-button"
+                      id="pay-button-{{ student.pk }}"
+                      data-student-id="{{ student.pk }}"
+                    >Pay Now</button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"
+/>
+
+<script>
+  $(document).ready(function () {
+    $("#student-table").DataTable({
+      dom: '<"dt-buttons"Bf><"clear">lirtp',
+      paging: true,
+      autoWidth: true,
+    });
+  });
+</script>
+<script>
+        $(document).ready(function() {
+            $(".pay-button").click(function(e) {
+                e.preventDefault(); // Prevent the default form submission
+                // Get the amount entered by the user
+                const studentId = $(this).data("student-id");
+                
+                // Get the amount specific to the clicked button's parent row
+                const amountText = $("#amount-" + studentId).text().trim();
+                const amount = parseInt(amountText);
+                console.log(amount);
+
+                // Make an AJAX request to initiate the payment
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'initiate_payment' %}",
+                    data: { amount: amount },
+                    dataType: "json",
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", $("[name=csrfmiddlewaretoken]").val());
+                    },
+                    success: function(data) {
+                        // Initialize Razorpay Checkout with the received values
+                        const options = {
+                            key: data.key,
+                            amount: data.amount,
+                            currency: data.currency,
+                            order_id: data.id,
+                            name: data.name,
+                            description: data.description,
+                            image: data.image,
+                            handler: function(response) {
+                                // Handle the payment success or failure and redirect accordingly
+                                if (response.razorpay_payment_id) {
+                                    // Payment successful, redirect to the success URL
+                                    window.location.href = "/payment-success/";
+                                } else {
+                                    // Payment failed or canceled, redirect to the failure URL
+                                    window.location.href = "/payment-failed/";
+                                }
+                            },
+                            prefill: {
+                                name: "Customer Name",
+                                email: "customer@example.com",
+                                contact: "customer_contact",
+                            },
+                        };
+
+                        const rzp = new Razorpay(options);
+                        rzp.open();
+                    },
+                    error: function(error) {
+                        console.error("Error initiating payment:", error);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock content %}

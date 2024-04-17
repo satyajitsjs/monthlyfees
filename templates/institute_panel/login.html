@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institute Login</title>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,300" rel="stylesheet" type="text/css"/>
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+            color: #353535;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #43cea2, #185a9d);
+        }
+
+        .login-wrapper {
+            box-shadow: 0 2px 18px rgba(0, 0, 0, 0.8);
+            position: relative;
+            margin: 0 auto;
+            max-width: 22em;
+            width: 90%;
+            padding: 2.5em 1.75em 1em 1.75em;
+            background-color: #fefefe;
+            border-radius: 8px;
+        }
+
+        h2 {
+            font-size: 2.1em;
+            text-align: center;
+            margin-bottom: 1.5em;
+            color: #000;
+        }
+
+        form {
+            margin-top: 1.5em;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5em;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75em;
+            margin-bottom: 1em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 1em;
+            color: #fff;
+            background: #3498db;
+            width: 100%;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #2077b0;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 1em;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="login-wrapper">
+    <h2>Institute Login</h2>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+    <form method="post" id="form_data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id">ID:</label>
+            <input type="text" id="id" name="id" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+            <button type="submit">Login</button>
+        </div>
+    </form>
+    <div class="form-group">
+        <label class="lblStatus" id="lblStatus"></label>
+    </div>
+</div>
+</body>
+</html>

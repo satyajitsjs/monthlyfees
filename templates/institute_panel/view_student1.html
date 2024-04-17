@@ -1,0 +1,37 @@
+{% extends "institute_panel/institute_dashboard.html" %}
+
+{% block content %}
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="pe-7s-notebook icon-gradient bg-mean-fruit"></i>
+                        </div>
+                        <div>View Student</div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <h5 class="card-title">Student Details</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">Admission Number: {{ student.admission_number }}</li>
+                        <li class="list-group-item">Admission Date: {{ student.admission_date }}</li>
+                        <li class="list-group-item">Name: {{ student.name }}</li>
+                        <li class="list-group-item">Class: {{ student.student_class }}</li>
+                        <li class="list-group-item">Section: {{ student.section }}</li>
+                        <li class="list-group-item">Course: {{ student.course }}</li>
+                        <li class="list-group-item">Contact Number: {{ student.contact_number }}</li>
+                        <li class="list-group-item">Gender: {{ student.gender }}</li>
+                        <li class="list-group-item">Monthly Fee Amount: {{ student.course_fee.fee_amount }}</li>
+                    </ul>
+                </div>
+            </div>
+            <a href="{% url 'student_list' %}" class="btn btn-primary btn-lg">Back</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
