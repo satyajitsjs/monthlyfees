@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import institute_login, institute_dashboard,add_student,student_list,view_student1,edit_student,delete_student,view_bse_fees1,view_cbse_fees1,view_competitive_fees1
-from .views import get_fee_amount
+from .views import get_fee_amount,fee_payment_page
 from institute_panel import views as v
 from . import views
 
@@ -20,7 +20,8 @@ urlpatterns = [
     
 
     path('get_fee_amount/', get_fee_amount, name='get_fee_amount'),
-
+    path('fee-payment/', fee_payment_page, name='fee_payment'),
+    
     path("get-payment-details/",v.show_payment_details, name='show_payment_details'),
     path("pay-now/<int:student_id>/",v.pay_now, name='pay_now'),
 

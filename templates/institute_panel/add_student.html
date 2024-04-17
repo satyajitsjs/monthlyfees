@@ -33,6 +33,7 @@
                         <div class="form-group">
                             <label for="class">Class:</label>
                             <select id="class" name="class" required class="form-control">
+                                <option value="" disabled selected>Select Class</option>
                                 {% for class_name in classes %}
                                     <option value="{{ class_name }}">{{ class_name }}</option>
                                 {% endfor %}
@@ -45,6 +46,7 @@
                         <div class="form-group">
                             <label for="course">Course:</label>
                             <select id="course" name="course" required class="form-control">
+                                <option value="" disabled selected>Select Course</option>
                                 {% for course in courses %}
                                     <option value="{{ course }}">{{ course }}</option>
                                 {% endfor %}

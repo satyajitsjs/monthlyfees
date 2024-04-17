@@ -8,7 +8,7 @@
             <div class="page-title-icon">
               <i class="pe-7s-notebook icon-gradient bg-mean-fruit"></i>
             </div>
-            <div>Student List</div>
+            <div>Student Fee Payment</div>
           </div>
         </div>
       </div>
@@ -47,27 +47,12 @@
                   <td>{{ student.course }}</td>
                   <td id="amount-{{ student.pk }}">{{ student.course_fee.fee_amount }}</td>
                   <td>
-                    <a
-                      href="{% url 'view_student1' student.pk %}"
-                      class="btn btn-info btn-sm"
-                      >View</a
-                    >
-                    <a
-                      href="{% url 'edit_student1' student.pk %}"
-                      class="btn btn-primary btn-sm"
-                      >Edit</a
-                    >
-                    <!-- Direct deletion link with success message -->
-                    <a
-                      href="{% url 'delete_student1' student.pk %}?success_message=Student '{{ student.name }}' has been deleted successfully."
-                      class="btn btn-danger btn-sm"
-                      >Delete</a
-                    >
-                    {% comment %} <button
+                    
+                    <button
                       class="btn btn-success btn-sm pay-button"
                       id="pay-button-{{ student.pk }}"
                       data-student-id="{{ student.pk }}"
-                    >Pay Now</button> {% endcomment %}
+                    >Pay Now</button>
                   </td>
                 </tr>
                 {% endfor %}
@@ -96,7 +81,7 @@
     });
   });
 </script>
-{% comment %} <script>
+<script>
         $(document).ready(function() {
             $(".pay-button").click(function(e) {
                 e.preventDefault(); // Prevent the default form submission
@@ -153,5 +138,5 @@
                 });
             });
         });
-    </script> {% endcomment %}
+    </script>
 {% endblock content %}

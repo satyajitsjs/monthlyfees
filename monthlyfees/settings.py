@@ -131,8 +131,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-RAZORPAY_API_KEY = 'rzp_test_USjgOYEsgwylGW'
-RAZORPAY_API_SECRET = 'ZY75jSa7jrUHpiii65FgGQZV'
+RAZORPAY_API_KEY = 'rzp_live_8BSQOvDBVe85L5'
+RAZORPAY_API_SECRET = 'jYeXnLt4RVbzA0b6GnpaeOf4'
 
 # To Enable Popus in Django or else it will block the payment popup
 # SECURE_CROSS_ORIGIN_OPENER_POLICY = "127.0.0.1:8000"

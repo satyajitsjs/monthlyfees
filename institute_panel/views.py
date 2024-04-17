@@ -223,6 +223,15 @@ def view_competitive_fees1(request):
     return render(request, 'institute_panel/view_competitive_fees1.html', {'competitive_fees': competitive_fees})
 
 
+def fee_payment_page(request):
+    # Retrieve the institute ID from the session
+    institute_id = request.session.get('institute_id')
+
+    # Filter students based on the institute ID
+    students = Student.objects.filter(institute__pk=institute_id)
+    
+    return render(request, 'institute_panel/fee_payment.html', {'students': students})
+
 
 
 def show_payment_details(request):
@@ -236,6 +245,7 @@ def pay_now(request,student_id):
 def initiate_payment(request):
     if request.method == "POST":
         amount = int(request.POST["amount"]) * 100  # Amount in paise
+        
 
         client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
 
@@ -256,9 +266,10 @@ def initiate_payment(request):
             "amount": order["amount"],
             "currency": order["currency"],
             "key": settings.RAZORPAY_API_KEY,
-            "name": "Your Company Name",
-            "description": "Payment for Your Product",
-            "image": "https://yourwebsite.com/logo.png",  # Replace with your logo URL
+            "name": "Vidya Bhaban",
+            "description": "Payment Monthly fees",
+            "image": "https://vidyabhaban.com/uploads/school_content/logo/1711654172-16878526516605c51c1f461!BAN1.jpg",  # Replace with your logo URL
+            
         }
         
         return JsonResponse(response_data)
