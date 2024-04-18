@@ -16,7 +16,7 @@
             </div>
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <form id="addInstituteForm" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="id">ID:</label>
@@ -32,8 +32,9 @@
                         </div>
                         <div class="form-group">
                             <label for="contact_number">Contact Number:</label>
-                            <input type="text" id="contact_number" name="contact_number" required class="form-control">
-                        </div>
+                            <input type="text" id="contact_number" name="contact_number" required class="form-control" pattern="\d{10,}">
+                            <div class="invalid-feedback">Please enter a valid contact number with at least 10 digits.</div>
+                        </div>                        
                         <div class="form-group">
                             <label for="image">Image:</label>
                             <input type="file" id="image" name="image" accept="image/*" required class="form-control-file">
@@ -53,21 +54,20 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        {% if messages %}
-            {% for message in messages %}
-                {% with alert_type=message.tags %}
-                    {% if not alert_type %}{% with alert_type='info' %}{% endwith %}{% endif %}
-                    Swal.fire({
-                        icon: '{{ alert_type }}',
-                        title: '{{ message }}',
-                        showConfirmButton: false,
-                        timer: 2000  // Set the timer to 2000 milliseconds (2 seconds)
-                    });
-                {% endwith %}
-            {% endfor %}
-        {% endif %}
+        document.getElementById('addInstituteForm').addEventListener('submit', function (event) {
+            var form = this;
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Please fill out all fields.',
+                    timer: 2000
+                });
+            }
+            form.classList.add('was-validated');
+        }, false);
     });
 </script>
-
-
 {% endblock content %}

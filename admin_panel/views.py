@@ -8,8 +8,11 @@ def Index_function(request):
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 
 def admin_login(request):
+    error = None  # Initialize error message variable
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -19,9 +22,7 @@ def admin_login(request):
             return redirect('admin_dashboard')  # Redirect to admin dashboard after login
         else:
             error = "Invalid username or password. Please try again."
-            return render(request, 'admin_panel/admin_login.html', {'error': error})
-    else:
-        return render(request, 'admin_panel/login.html')
+    return render(request, 'admin_panel/login.html', {'error': error})
 
 
 
@@ -31,9 +32,13 @@ def admin_logout(request):
     return redirect('admin_login')
 
 
-
+@login_required(login_url='admin_login')
 def admin_dashboard(request):
-    return render(request , "admin_panel/admin_dashboard.html")
+    if request.user.is_staff:
+        return render(request , "admin_panel/admin_dashboard.html")
+    else:
+        # Redirect to login page if user is not staff
+        return redirect('admin_login')
 
 
 
@@ -42,6 +47,7 @@ from django.shortcuts import render, redirect
 from .models import Institute
 from django.contrib import messages
 
+@login_required(login_url='admin_login')
 def add_institute(request):
     if request.method == 'POST':
         name = request.POST.get('name')

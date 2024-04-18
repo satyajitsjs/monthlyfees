@@ -27,16 +27,18 @@ class Student(models.Model):
 
 
 class Payment(models.Model):
-    PAYEMENT_STATUS = (
-        (0,"Payement Pending"),
-        (1,"Payement Success"),
+    PAYMENT_STATUS = (
+        (0, "Payment Pending"),
+        (1, "Payment Success"),
     )
-    student = models.OneToOneField(Student,on_delete=models.CASCADE)
-    course_fee = models.ForeignKey(CourseFee,on_delete=models.CASCADE,null=True,blank=True)
-    payment_status = models.IntegerField(default=0,choices=PAYEMENT_STATUS)
+    student = models.OneToOneField(Student, on_delete=models.CASCADE)
+    course_fee = models.ForeignKey(CourseFee, on_delete=models.CASCADE, null=True, blank=True)
+    payment_status = models.IntegerField(default=0, choices=PAYMENT_STATUS)
+    payment_date = models.DateTimeField(default=timezone.now)  # Date and time of payment
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-    def __str__(self) -> str:
-        return super().__str__()
+    def __str__(self):
+        return f"{self.student} - {self.get_payment_status_display()} - {self.payment_date}"
     
     
     

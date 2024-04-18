@@ -16,7 +16,7 @@
             </div>
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <form method="post" class="needs-validation" novalidate>
+                    <form method="post" id="addStudentForm" class="needs-validation" novalidate>
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="admission_number">Admission Number:</label>
@@ -24,7 +24,9 @@
                         </div>
                         <div class="form-group">
                             <label for="admission_date">Admission Date:</label>
-                            <input type="date" id="admission_date" name="admission_date" required class="form-control">
+                            <input type="date" id="admission_date" name="admission_date" class="form-control" required>
+                            <div class="invalid-feedback">Please select the admission date.</div>
+                            <div class="invalid-feedback" id="date-format-feedback" style="display: none;">Date must be in YYYY-MM-DD format.</div>
                         </div>
                         <div class="form-group">
                             <label for="student_name">Student Name:</label>
@@ -54,7 +56,8 @@
                         </div>
                         <div class="form-group">
                             <label for="contact_number">Contact Number:</label>
-                            <input type="text" id="contact_number" name="contact_number" required class="form-control">
+                            <input type="text" id="contact_number" name="contact_number" required class="form-control" pattern="\d{10,}">
+                            <div class="invalid-feedback">Please enter a valid contact number with at least 10 digits.</div>
                         </div>
                         <div class="form-group">
                             <label for="gender">Gender:</label>
@@ -75,7 +78,6 @@
         </div>
     </div>
 </div>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
@@ -84,7 +86,7 @@ $(document).ready(function(){
         var selected_course = $('#course').val();
         
         $.ajax({
-            url: '{% url 'get_fee_amount' %}',  // URL to fetch fee amount using Django template tag
+            url: '{% url 'get_fee_amount' %}',
             type: 'GET',
             data: {'class': selected_class, 'course': selected_course},
             success: function(response){
@@ -95,6 +97,44 @@ $(document).ready(function(){
             }
         });
     });
+
+    // Validate contact number to have exactly 10 digits
+    $('#contact_number').on('input', function() {
+        var contactNumber = $(this).val();
+        if (contactNumber.length !== 10) {
+            $(this).addClass('is-invalid');
+            $(this).removeClass('is-valid');
+        } else {
+            $(this).removeClass('is-invalid');
+            $(this).addClass('is-valid');
+        }
+    });
+
+    // Form submission handling and validation
+    $('#addStudentForm').submit(function(event) {
+        var form = $(this)[0];
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+
+    // Admission date format validation
+    $('#addStudentForm').submit(function(event) {
+        var admissionDateInput = $('#admission_date').val();
+        if (!isValidDateFormat(admissionDateInput)) {
+            $('#admission_date').addClass('is-invalid');
+            $('#date-format-feedback').css('display', 'block');
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    });
+
+    function isValidDateFormat(dateString) {
+        var regex = /^\d{4}-\d{2}-\d{2}$/;
+        return regex.test(dateString);
+    }
 });
 </script>
 

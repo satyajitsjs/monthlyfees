@@ -16,25 +16,28 @@
             </div>
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <form method="post" class="needs-validation" novalidate>
+                    <form method="post" id="editBseFeesForm" class="needs-validation" novalidate>
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="fee_amount">Fee Amount:</label>
                             <input type="text" id="fee_amount" name="fee_amount" value="{{ fee.fee_amount }}" required class="form-control">
+                            <div class="invalid-feedback">Please enter a valid fee amount.</div>
                         </div>
                         <div class="form-group">
                             <label for="class_name">Class:</label>
-                            <select id="class_name" name="class_name" class="form-control" disabled>
+                            <select id="class_name" name="class_name" class="form-control" disabled required>
                                 {% for class_option in class_options %}
                                     <option value="{{ class_option }}" {% if class_option == fee.class_name %}selected{% endif %}>{{ class_option }}</option>
                                 {% endfor %}
                             </select>
+                            <div class="invalid-feedback">Please select a class.</div>
                         </div>
                         <div class="form-group">
                             <label for="course">Course:</label>
-                            <select id="course" name="course" class="form-control" disabled>
+                            <select id="course" name="course" class="form-control" disabled required>
                                 <option value="BSE">BSE</option>
                             </select>
+                            <div class="invalid-feedback">Please select a course.</div>
                         </div>
                         <!-- Add other form fields as needed -->
                         <button type="submit" class="mt-1 btn btn-primary">Submit</button>
@@ -46,4 +49,24 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById('editBseFeesForm').addEventListener('submit', function (event) {
+            var form = this;
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Please fill out all fields correctly.',
+                    timer: 2000
+                });
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+</script>
 {% endblock content %}

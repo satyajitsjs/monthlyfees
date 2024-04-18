@@ -444,23 +444,23 @@
                                 <li>
                                     <a href="{% url 'fee_payment' %}">
                                         <i class="metismenu-icon pe-7s-eyedropper">
-                                        </i>Fees Payment
+                                        </i>Student Fees Payment
                                     </a>
                                 </li>
                                 
                                 <li class="app-sidebar__heading">Reports</li>
                                 <li>
-                                    <a href="forms-controls.html">
+                                    <a href="{% url 'payment_report' %}">
                                         <i class="metismenu-icon pe-7s-mouse">
-                                        </i>Institue Lists
+                                        </i>Student Payment Reports
                                     </a>
                                 </li>
-                                <li>
+                                {% comment %} <li>
                                     <a href="forms-layouts.html">
                                         <i class="metismenu-icon pe-7s-eyedropper">
                                         </i>Student List
                                     </a>
-                                </li>
+                                </li> {% endcomment %}
                                 
                                 <li class="app-sidebar__heading">Logout</li>
                                 <li>

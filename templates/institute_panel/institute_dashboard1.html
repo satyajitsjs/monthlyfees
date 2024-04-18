@@ -1,0 +1,863 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <title>Employee | Dashboard</title>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="handheldfriendly" content="true" />
+  <meta name="MobileOptimized" content="width" />
+  <meta name="description" content="Mordenize" />
+  <meta name="author" content="" />
+  <meta name="keywords" content="Mordenize" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/png" href="https://python.gvit.in/staticapkproject/images/logo.png" />
+
+
+  <!-- Core Css -->
+  <link id="themeColors" rel="stylesheet" href="{% static 'dashboard/dist/css/style.min.css' %}" />
+
+  <!-- Data Table -->
+  <link rel="stylesheet" href="{% static 'dashboard/dist/libs/prismjs/themes/prism-okaidia.min.css' %}">
+  <link rel="stylesheet" href="{% static 'dashboard/dist/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css' %}">
+  <link rel="stylesheet" href="{% static 'dashboard/dist/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css' %}">
+
+  <!-- Include SweetAlert and jQuery -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+</head>
+<style>
+  /* Custom CSS for responsive table */
+  .datatable-responsived {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .clock {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  .clock-container , #DateCurrent{
+    background-color: #e9cece7c;
+    color: #0c0c0c;
+    font-size: 2rem;
+    font-weight: bold;
+    font-size: 17px;
+
+  }
+
+  .custom-card {
+    max-width: 400px; /* Adjust the maximum width as needed */
+    
+}
+
+</style>
+
+<body>
+
+
+  <!-- Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+
+    <!-- Sidebar Start -->
+    <aside class="left-sidebar">
+
+      <!-- Sidebar scroll-->
+      <div>
+        <div class="brand-logo d-flex align-items-center justify-content-between mt-2">
+          <a href="{% url 'apkmart_app:user_dashboard' %}" class="text-nowrap logo-img">
+            <!--<img src="https://python.gvit.in/staticapkproject/images/logo.png" class="dark-logo" width="180" alt="" />-->
+            <img src="{% static 'dashboard/assets/images/apk_logo.png' %}" alt="Company Logo" height="70px"
+              width="190px">
+          </a>
+          <div class="close-btn d-lg-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+            <i class="ti ti-x fs-8 text-muted"></i>
+          </div>
+        </div>
+
+
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav scroll-sidebar" data-simplebar>
+          <ul id="sidebarnav">
+
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Home</span>
+            </li>
+
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{% url 'apkmart_app:user_dashboard' %}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-qrcode"></i>
+                </span>
+                <span class="hide-menu">Dashboard</span>
+              </a>
+            </li>
+
+
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">MIS</span>
+            </li>
+
+            {% comment %} <li class="sidebar-item">
+              <a class="sidebar-link" href="{% url 'apkmart_app:dataTable_Function' %}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-list-details"></i>
+                </span>
+                <span class="hide-menu">Data Table</span>
+              </a>
+            </li> {% endcomment %}
+
+
+
+            <li class="sidebar-item">
+
+              <a class="sidebar-link has-arrow" href="#a" aria-expanded="false">
+                <span class="d-flex">
+                  <i class="far fa-calendar"></i>
+                </span>
+                <span class="hide-menu">Holidays</span>
+              </a>
+
+
+
+              <ul aria-expanded="false" class="collapse first-level">
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:create_holidays_emp_Function' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Request Holidays</span>
+                  </a>
+                </li>
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:employee_holidays_list_Function' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Holidays Lists</span>
+                  </a>
+                </li>
+
+              </ul>
+            </li>
+
+            <li class="sidebar-item">
+              <a href="{% url 'apkmart_app:add_daily_data' %}" class="sidebar-link">
+                <div class="round-16 d-flex align-items-center justify-content-center">
+                  <i class="ti ti-circle icon"></i> <!-- Try a different icon class -->
+                </div>
+                <span class="hide-menu">Daily Activity</span>
+              </a>
+            </li>
+
+            <li class="sidebar-item">
+
+              <a class="sidebar-link has-arrow" href="#a" aria-expanded="false">
+                <span class="d-flex">
+                  <i class="far fa-calendar"></i>
+                </span>
+                <span class="hide-menu">Tasks</span>
+              </a>
+
+
+
+              <ul aria-expanded="false" class="collapse first-level">
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:assigned_tasks' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Assigned Tasks</span>
+                  </a>
+                </li>
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:assigned_tasks_reports' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Assigned Tasks Reports</span>
+                  </a>
+                </li>
+
+
+              </ul>
+            </li>
+
+            <li class="sidebar-item">
+
+              <a class="sidebar-link has-arrow" href="#a" aria-expanded="false">
+                <span class="d-flex">
+                  <i class="fas fa-star"></i>
+                </span>
+                <span class="hide-menu">Investor</span>
+              </a>
+
+
+
+
+              <ul aria-expanded="false" class="collapse first-level">
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:client' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Investors</span>
+                  </a>
+                </li>
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:investor_documents_creation' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Investor's Documents</span>
+                  </a>
+                </li>
+
+              </ul>
+            </li>
+
+
+            <li class="sidebar-item">
+
+              <a class="sidebar-link has-arrow" href="#a" aria-expanded="false">
+                <span class="d-flex">
+                  <i class="fas fa-star"></i>
+                </span>
+                <span class="hide-menu">Generate Leads</span>
+              </a>
+
+              <ul aria-expanded="false" class="collapse first-level">
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:LeadsGenerateFunction' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Entry Leads</span>
+                  </a>
+                </li>
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:generate_leads' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Generate Leads</span>
+                  </a>
+                </li>
+
+              </ul>
+            </li>
+
+
+            <li class="sidebar-item">
+
+              <a class="sidebar-link has-arrow" href="#a" aria-expanded="false">
+                <span class="d-flex">
+                  <i class="fas fa-list"></i>
+                </span>
+                <span class="hide-menu">Query Management</span>
+              </a>
+
+
+
+              <ul aria-expanded="false" class="collapse first-level">
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:query_management' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Add Query</span>
+                  </a>
+                </li>
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:curiour_management' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Courier Queries</span>
+                  </a>
+                </li>
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:couriers_status' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Courier Status</span>
+                  </a>
+                </li>
+
+                <li class="sidebar-item">
+                  <a href="{% url 'apkmart_app:reverted_curiour' %}" class="sidebar-link">
+                    <div class="round-16 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-circle"></i>
+                    </div>
+                    <span class="hide-menu">Reverted Couriers</span>
+                  </a>
+                </li>
+
+              </ul>
+
+            <li class="sidebar-item">
+              <a href="{% url 'apkmart_app:user_travel_allowance' %}" class="sidebar-link">
+                <div class="round-16 d-flex align-items-center justify-content-center">
+                  <i class="ti ti-plane"></i>
+                </div>
+                <span class="hide-menu">Travel Allowance</span>
+              </a>
+            </li>
+
+            <li class="sidebar-item">
+              <a href="{% url 'apkmart_app:user_view_salary' %}" class="sidebar-link">
+                <div class="round-16 d-flex align-items-center justify-content-center">
+                  <i class="ti ti-circle icon"></i> <!-- Try a different icon class -->
+                </div>
+                <span class="hide-menu">View Salary</span>
+              </a>
+            </li>
+
+
+            <li class="sidebar-item">
+              <a href="{% url 'apkmart_app:user_ctc_structure' %}" class="sidebar-link">
+                <div class="round-16 d-flex align-items-center justify-content-center">
+                  <i class="ti ti-briefcase"></i>
+                </div>
+                <span class="hide-menu">CTC Structure</span>
+              </a>
+            </li>
+
+            </li>
+
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Reports</span>
+            </li>
+
+            <li class="sidebar-item">
+              <a href="{% url 'apkmart_app:user_travel_allowance_report' %}" class="sidebar-link">
+                <div class="round-16 d-flex align-items-center justify-content-center">
+                  <i class="fas fa-car"></i> <!-- Change to the desired icon class -->
+                </div>
+                <span class="hide-menu">Travel Allowance</span>
+              </a>
+            </li>
+
+            <li class="sidebar-item">
+              <a href="{% url 'apkmart_app:user_view_salary_report' %}" class="sidebar-link">
+                <div class="round-16 d-flex align-items-center justify-content-center">
+                  <i class="fas fa-eye icon"></i> <!-- Change to the desired icon class -->
+                </div>
+                <span class="hide-menu">View Salary</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a href="{% url 'apkmart_app:user_ctc_structure_report' %}" class="sidebar-link">
+                <div class="round-16 d-flex align-items-center justify-content-center">
+                  <i class="fas fa-briefcase"></i> <!-- Change to the desired icon class -->
+                </div>
+                <span class="hide-menu">CTC Structure</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a href="{% url 'apkmart_app:dsr_report' %}" class="sidebar-link">
+                <div class="round-16 d-flex align-items-center justify-content-center">
+                  <i class="fas fa-briefcase"></i>
+                </div>
+                <span class="hide-menu">DSR Reports</span>
+              </a>
+            </li>
+
+          </ul>
+        </nav>
+      </div>
+      <!-- End Sidebar scroll-->
+    </aside>
+    <!-- Sidebar End -->
+
+
+
+    <!-- Main wrapper -->
+    <div class="body-wrapper">
+      <!-- Header Start -->
+      <header class="app-header">
+        <nav class="navbar navbar-expand-lg navbar-light">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link sidebartoggler nav-icon-hover ms-n3" id="headerCollapse" href="javascript:void(0)">
+                <i class="ti ti-menu-2"></i>
+              </a>
+            </li>
+            <li class="nav-item d-none d-lg-block">
+              <a class="nav-link nav-icon-hover" href="javascript:void(0)" data-bs-toggle="modal"
+                data-bs-target="#exampleModal">
+                <i class="ti ti-search"></i>
+              </a>
+            </li>
+          </ul>
+
+
+
+          <div class="d-block d-lg-none">
+            <img src="https://python.gvit.in/staticapkproject/images/logo.png" class="dark-logo" width="180" alt="" />
+            <img src="https://python.gvit.in/staticapkproject/images/logo.png" class="light-logo" width="180" alt="" />
+          </div>
+
+          <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="p-2">
+              <i class="ti ti-dots fs-7"></i>
+            </span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <div class="d-flex align-items-center justify-content-between">
+              <a href="javascript:void(0)" class="nav-link d-flex d-lg-none align-items-center justify-content-center"
+                type="button" data-bs-toggle="offcanvas" data-bs-target="#mobilenavbar"
+                aria-controls="offcanvasWithBothOptions">
+                <i class="ti ti-align-justified fs-7"></i>
+              </a>
+
+
+              <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-center">
+
+                <li class="nav-item dropdown">
+
+                  <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="ti ti-bell-ringing"></i>
+                    <div class="notification bg-primary rounded-circle"></div>
+                  </a>
+
+                  <div class="dropdown-menu content-dd dropdown-menu-end dropdown-menu-animate-up"
+                    aria-labelledby="drop2">
+                    <div class="d-flex align-items-center justify-content-between py-3 px-7">
+                      <h5 class="mb-0 fs-5 fw-semibold">Notifications</h5>
+                      <span class="badge bg-primary rounded-4 px-3 py-1 lh-sm">5 new</span>
+                    </div>
+
+                    <div class="message-body" data-simplebar>
+                      <a href="javascript:void(0)" class="py-6 px-7 d-flex align-items-center dropdown-item">
+                        <span class="me-3">
+                          <img src="https://cdn-icons-png.flaticon.com/512/219/219986.png" alt="user"
+                            class="rounded-circle" width="48" height="48" />
+                        </span>
+                        <div class="w-75 d-inline-block v-middle">
+                          <h6 class="mb-1 fw-semibold">Roman Joined the Team!</h6>
+                          <span class="d-block">Congratulate him</span>
+                        </div>
+                      </a>
+                    </div>
+
+                    <div class="py-6 px-7 mb-1">
+                      <button class="btn btn-outline-primary w-100"> See All Notifications </button>
+                    </div>
+                  </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a class="nav-link pe-0" href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <div class="d-flex align-items-center">
+                      <div class="user-profile-img">
+                        {% if user.is_authenticated %}
+                        {% if user.employee.user_image %}
+                        <img src="{{ user.employee.user_image.url }}" alt="Profile Image" class="rounded-circle m-1"
+                          width="50">
+                        {% else %}
+                        <!-- Default image if the user doesn't have a profile image -->
+                        <img
+                          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR56rn6SPM8T2swfi_RHpSe1SWVBUMZDm9kd418KVsDq7RHyksHSEqT6mel1JQ845Erack&usqp=CAU"
+                          class="rounded-circle m-1" alt="user1" width="60">
+                        {% endif %}
+                        {% endif %}
+
+
+                      </div>
+                    </div>
+                  </a>
+                  <div class="dropdown-menu content-dd dropdown-menu-end dropdown-menu-animate-up"
+                    aria-labelledby="drop1">
+                    <div class="profile-dropdown position-relative" data-simplebar>
+                      <div class="py-3 px-7 pb-0">
+                        <h5 class="mb-0 fs-5 fw-semibold">User Profile</h5>
+                      </div>
+                      <div class="d-flex align-items-center py-9 mx-7 border-bottom">
+                        {% if user.is_authenticated %}
+                        {% if user.employee.user_image %}
+                        <img src="{{ user.employee.user_image.url }}" alt="Profile Image" class="rounded-circle m-1"
+                          width="60">
+                        {% else %}
+                        <!-- Default image if the user doesn't have a profile image -->
+                        <img
+                          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR56rn6SPM8T2swfi_RHpSe1SWVBUMZDm9kd418KVsDq7RHyksHSEqT6mel1JQ845Erack&usqp=CAU"
+                          class="rounded-circle m-1" alt="user1" width="60">
+                        {% endif %}
+                        {% endif %}
+                        <div class="ms-3">
+                          <h5 class="mb-1 fs-3">{{ request.user.username }}</h5>
+
+                          <p class="mb-0 d-flex text-dark align-items-center gap-2">
+                            <i class="ti ti-mail fs-4"></i> {{ request.user.email }}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div class="message-body">
+                        <a href="#" class="py-8 px-7 mt-8 d-flex align-items-center">
+                          <span class="d-flex align-items-center justify-content-center bg-light rounded-1 p-6">
+                            <img
+                              src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-account.svg"
+                              alt="" width="24" height="24">
+                          </span>
+
+                          <div class="w-75 d-inline-block v-middle ps-3">
+                            <h6 class="mb-1 bg-hover-primary fw-semibold"> My Profile </h6>
+                            <span class="d-block text-dark">Account Settings</span>
+                          </div>
+                        </a>
+                      </div>
+
+                      <div class="d-grid py-4 px-7 pt-8">
+                        <a href="{% url 'apkmart_app:user_logout' %}" class="btn btn-outline-primary">Log Out</a>
+                      </div>
+
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <!-- Header End -->
+
+
+      <div class="container-fluid">
+        {% block content %}
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card custom-card shadow">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12 text-center">
+                      <div class="clock-container border rounded p-3">
+                          <div class="clock" id="clock">
+                              <!-- Current date and time will be displayed here -->
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              
+                <div class="row mt-3">
+                  <div class="col-md-12 text-center">
+                    <!-- Add your rounded image here -->
+                    <img src="https://thumbs.dreamstime.com/b/attendance-speech-bubble-white-background-vector-illustration-141014253.jpg" alt="Your Image" class="img-fluid rounded"
+                      style="max-width: 100px;">
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-md-12">
+                    <button id="punchInBtn" class="btn btn-sm btn-success btn-block mt-2">
+                      <i class="fas fa-sign-in-alt"></i> Punch In
+                    </button>
+                    <button id="punchOutBtn" class="btn btn-sm btn-danger btn-block mt-2">
+                      <i class="fas fa-sign-out-alt"></i> Punch Out
+                    </button>
+                    <a href="{% url 'apkmart_app:attendance_details' %}"><button class="btn btn-sm btn-secondary btn-block mt-2 mx-4">
+                      <i class="fas fa-info-circle"></i> View Details
+                    </button></a>                  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card custom-card shadow">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12 text-center">
+                    <div class="col-md-12" id="DateCurrent">
+                      <p id="currentDate" class="p-4 rounded"></p>
+                  </div>
+                  </div>
+                </div>
+                
+                <div class="row mt-3">
+                  <div class="col-md-12">
+                      <p id="punchInTime" class="mb-1"><strong>Punch In Time:</strong>{% if punch_in_time %} {{ punch_in_time|date:"H:i A" }}
+                          {% else %}
+                          <strong style="color: red;">Not Done Yet</strong>{% endif %}
+                      </p>
+                      <p id="punchOutTime" class="mb-0"><strong>Punch Out Time:</strong> {% if punch_out_time %}{{ punch_out_time|date:"H:i A" }}{% else %}
+                          <strong style="color: red;">Not Done Yet</strong>{% endif %}
+                      </p>
+                  </div>
+              </div>
+              
+              <div class="row mt-3">
+                <div class="col-md-12">
+                    <p style="color: rgba(54, 6, 6, 0.89);">
+                        Make sure to punch in and punch out accurately to ensure accurate attendance records.
+                        <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Attendance Will Count for a day by checking both PUNCH IN and PUNCH OUT"></i>
+                    </p>
+                </div>
+            </div>
+            
+              
+                            
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% endblock content %}
+      </div>
+      <script>
+        function updateClock() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+    
+            // Convert 24-hour format to 12-hour format
+            hours = hours % 12;
+            hours = hours ? hours : 12; // Handle midnight
+    
+            // Format the time as needed (e.g., add leading zeros)
+            var formattedTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+    
+            // Update the #clock element with the formatted time
+            document.getElementById('clock').innerText = formattedTime;
+    
+            setTimeout(updateClock, 1000); // Update every second
+        }
+    
+        // Initial call to start the clock
+        updateClock();
+
+        function updateDateTime() {
+          var now = new Date();
+  
+          // Update Current Date
+          var currentDateElement = document.getElementById('currentDate');
+          currentDateElement.innerText = now.toDateString();
+          
+          setTimeout(updateDateTime, 1000 * 60); // Update every minute (adjust as needed)
+        }
+  
+        // Initial call to start updating date and times
+        updateDateTime();
+    </script>
+
+      <script>
+        $(document).ready(function () {
+          // Get CSRF token
+          const csrfToken = $('input[name=csrfmiddlewaretoken]').val();
+
+          // Function to handle AJAX response
+          function handleResponse(response) {
+            if (response.success) {
+              // Display success message using SweetAlert
+              swal('Success', response.message, 'success');
+            } else {
+              // Display error message using SweetAlert
+              swal('Error', response.message, 'error');
+            }
+          }
+
+          // Handle Punch In button click
+          $('#punchInBtn').click(function () {
+            $.ajax({
+              url: '{% url "apkmart_app:recordPunch" punch_type="in" %}',
+              type: 'post',
+              headers: {
+                'X-CSRFToken': csrfToken,
+                'X-Client-Time': new Date().toISOString()
+              },
+              success: function (response) {
+                handleResponse(response);
+              }
+            });
+          });
+
+          // Handle Punch Out button click
+          $('#punchOutBtn').click(function () {
+            $.ajax({
+              url: '{% url "apkmart_app:recordPunch" punch_type="out" %}',
+              type: 'post',
+              headers: {
+                'X-CSRFToken': csrfToken,
+                'X-Client-Time': new Date().toISOString()
+              },
+              success: function (response) {
+                handleResponse(response);
+              }
+            });
+          });
+        });
+      </script>
+
+      <!-- container-fluid over -->
+    </div>
+  </div>
+  <div class="dark-transparent sidebartoggler"></div>
+  <div class="dark-transparent sidebartoggler"></div>
+  </div>
+
+  <!--  Mobilenavbar -->
+
+
+
+  <!-- Search Bar -->
+  <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content rounded-1">
+          <div class="modal-header border-bottom">
+            <input type="search" class="form-control fs-3" placeholder="Search here" id="search" />
+            <span data-bs-dismiss="modal" class="lh-1 cursor-pointer">
+              <i class="ti ti-x fs-5 ms-3"></i>
+            </span>
+          </div>
+          <div class="modal-body message-body" data-simplebar="">
+            <h5 class="mb-0 fs-5 p-1">Quick Page Links</h5>
+            <ul class="list mb-0 py-2">
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Modern</span>
+                  <span class="fs-3 text-muted d-block">/dashboards/dashboard1</span>
+                </a>
+              </li>
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Dashboard</span>
+                  <span class="fs-3 text-muted d-block">/dashboards/dashboard2</span>
+                </a>
+              </li>
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Contacts</span>
+                  <span class="fs-3 text-muted d-block">/apps/contacts</span>
+                </a>
+              </li>
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Posts</span>
+                  <span class="fs-3 text-muted d-block">/apps/blog/posts</span>
+                </a>
+              </li>
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Detail</span>
+                  <span class="fs-3 text-muted d-block">/apps/blog/detail/streaming-video-way-before-it-was-cool-go-dark-tomorrow</span>
+                </a>
+              </li>
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Shop</span>
+                  <span class="fs-3 text-muted d-block">/apps/ecommerce/shop</span>
+                </a>
+              </li>
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Modern</span>
+                  <span class="fs-3 text-muted d-block">/dashboards/dashboard1</span>
+                </a>
+              </li>
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Dashboard</span>
+                  <span class="fs-3 text-muted d-block">/dashboards/dashboard2</span>
+                </a>
+              </li>
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Contacts</span>
+                  <span class="fs-3 text-muted d-block">/apps/contacts</span>
+                </a>
+              </li>
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Posts</span>
+                  <span class="fs-3 text-muted d-block">/apps/blog/posts</span>
+                </a>
+              </li>
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Detail</span>
+                  <span class="fs-3 text-muted d-block">/apps/blog/detail/streaming-video-way-before-it-was-cool-go-dark-tomorrow</span>
+                </a>
+              </li>
+              <li class="p-1 mb-1 bg-hover-light-black">
+                <a href="#">
+                  <span class="fs-3 text-black fw-normal d-block">Shop</span>
+                  <span class="fs-3 text-muted d-block">/apps/ecommerce/shop</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+
+
+  <!-- Import Js Files -->
+  <script src="{% static 'dashboard/dist/libs/jquery/dist/jquery.min.js' %}"></script>
+  <script src="{% static 'dashboard/dist/libs/simplebar/dist/simplebar.min.js' %}"></script>
+  <script src="{% static 'dashboard/dist/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+
+
+  <!-- core files -->
+  <script src="{% static 'dashboard/dist/js/app.min.js' %}"></script>
+  <script src="{% static 'dashboard/dist/js/app.init.js' %}"></script>
+  <script src="{% static 'dashboard/dist/js/app-style-switcher.js' %}"></script>
+  <script src="{% static 'dashboard/dist/js/sidebarmenu.js' %}"></script>
+  <script src="{% static 'dashboard/dist/js/custom.js' %}"></script>
+  <script src="{% static 'dashboard/dist/libs/prismjs/prism.js' %}"></script>
+
+
+  <!-- Dashboard page js files -->
+  <script src="{% static 'dashboard/dist/libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+  <script src="{% static 'dashboard/dist/js/dashboard5.js' %}"></script>
+
+
+
+  <!-- Data Table js files -->
+  <!-- ---------------------------------------------- -->
+  <script src="{% static 'dashboard/dist/libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+
+  <script src="{% static 'dashboard/cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js' %}"></script>
+  <script src="{% static 'dashboard/cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js' %}"></script>
+  <script src="{% static 'dashboard/cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js' %}"></script>
+  <script src="{% static 'dashboard/cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js' %}"></script>
+  <script src="{% static 'dashboard/cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js' %}"></script>
+  <script src="{% static 'dashboard/cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js' %}"></script>
+  <script src="{% static 'dashboard/cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js' %}"></script>
+
+  <script src="{% static 'dashboard/dist/js/datatable/datatable-advanced.init.js' %}"></script>
+  <script src="{% static 'dashboard/dist/libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'dashboard/dist/js/datatable/datatable-api.init.js' %}"></script>
+</body>
+
+
+</html>

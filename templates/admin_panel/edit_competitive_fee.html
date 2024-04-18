@@ -16,23 +16,27 @@
             </div>
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <form method="post" class="needs-validation" novalidate>
+                    <form method="post" id="editCompetitiveFeesForm" class="needs-validation" novalidate>
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="fee_amount">Fee Amount:</label>
                             <input type="text" id="fee_amount" name="fee_amount" value="{{ fee.fee_amount }}" required class="form-control">
+                            <div class="invalid-feedback">Please enter a valid fee amount.</div>
                         </div>
                         <div class="form-group">
                             <label for="duration">Duration:</label>
                             <input type="text" id="duration" name="duration" value="{{ fee.duration }}" required class="form-control">
+                            <div class="invalid-feedback">Please enter a valid duration.</div>
                         </div>
                         <div class="form-group">
                             <label for="subject">Subject:</label>
                             <input type="text" id="subject" name="subject" value="{{ fee.subject }}" required class="form-control">
+                            <div class="invalid-feedback">Please enter a valid subject.</div>
                         </div>
                         <div class="form-group">
                             <label for="qualification">Qualification:</label>
                             <input type="text" id="qualification" name="qualification" value="{{ fee.qualification }}" required class="form-control">
+                            <div class="invalid-feedback">Please enter a valid qualification.</div>
                         </div>
                         <div class="form-group">
                             <label for="course">Course:</label>
@@ -40,7 +44,6 @@
                                 <option value="Competitive">Competitive</option>
                             </select>
                         </div>
-                        <!-- Add other form fields as needed -->
                         <button type="submit" class="mt-1 btn btn-primary">Submit</button>
                         <a href="{% url 'view_competitive_fees' %}" class="mt-1 btn btn-secondary">Back</a> <!-- Add the back button -->
                     </form>
@@ -49,4 +52,25 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById('editCompetitiveFeesForm').addEventListener('submit', function (event) {
+            var form = this;
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Please fill out all fields correctly.',
+                    timer: 2000
+                });
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+</script>
 {% endblock content %}

@@ -19,20 +19,21 @@
             <div class="main-card mb-3 card">
                 <div class="card-body">
                     <h5 class="card-title">Edit Institute Details</h5>
-                    <form method="post" enctype="multipart/form-data">
+                    <form id="editInstituteForm" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
                         {% csrf_token %}
                         <!-- Populate form fields with institute details -->
                         <div class="form-group">
                             <label for="name">Name:</label>
-                            <input type="text" id="name" name="name" value="{{ institute.name }}" class="form-control">
+                            <input type="text" id="name" name="name" value="{{ institute.name }}" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="location">Location:</label>
-                            <input type="text" id="location" name="location" value="{{ institute.location }}" class="form-control">
+                            <input type="text" id="location" name="location" value="{{ institute.location }}" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="contact_number">Contact Number:</label>
-                            <input type="text" id="contact_number" name="contact_number" value="{{ institute.contact_number }}" class="form-control">
+                            <input type="text" id="contact_number" name="contact_number" value="{{ institute.contact_number }}" class="form-control" required pattern="\d{10,}">
+                            <div class="invalid-feedback">Please enter a valid contact number with at least 10 digits.</div>
                         </div>
                         <div class="form-group">
                             <label for="change_image">Change Image:</label>
@@ -46,7 +47,7 @@
                         <div class="form-group">
                             <label for="current_password">Current Password:</label>
                             <div class="input-group">
-                                <input type="password" id="current_password" name="current_password" value="{{ institute.admin_password }}" class="form-control">
+                                <input type="password" id="current_password" name="current_password" value="{{ institute.admin_password }}" class="form-control" required>
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" id="toggle-password">Show Password</button>
                                 </div>
@@ -72,16 +73,44 @@
 </div>
 
 <script>
-    document.getElementById("toggle-password").addEventListener("click", function () {
-        var passwordInput = document.getElementById("current_password");
+    // Function to toggle password visibility
+    function togglePassword(inputId, buttonId) {
+        var passwordInput = document.getElementById(inputId);
+        var button = document.getElementById(buttonId);
         if (passwordInput.type === "password") {
             passwordInput.type = "text";
-            this.textContent = "Hide Password";
+            button.textContent = "Hide Password";
         } else {
             passwordInput.type = "password";
-            this.textContent = "Show Password";
+            button.textContent = "Show Password";
         }
+    }
+
+    // Event listener to toggle current password visibility
+    document.getElementById("toggle-password").addEventListener("click", function () {
+        togglePassword("current_password", "toggle-password");
     });
+
+    // Event listener to toggle new password visibility
+    document.getElementById("toggle-new-password").addEventListener("click", function () {
+        togglePassword("new_password", "toggle-new-password");
+    });
+
+    // Form validation
+    document.getElementById("editInstituteForm").addEventListener("submit", function (event) {
+        var form = this;
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: 'Please fill out all required fields.',
+                timer: 2000
+            });
+        }
+        form.classList.add('was-validated');
+    }, false);
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -101,18 +130,6 @@
                 {% endwith %}
             {% endfor %}
         {% endif %}
-    });
-</script>
-<script>
-    document.getElementById("toggle-new-password").addEventListener("click", function () {
-        var passwordInput = document.getElementById("new_password");
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            this.textContent = "Hide Password";
-        } else {
-            passwordInput.type = "password";
-            this.textContent = "Show Password";
-        }
     });
 </script>
 {% endblock content %}

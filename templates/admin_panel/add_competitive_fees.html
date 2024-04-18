@@ -16,23 +16,27 @@
             </div>
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <form method="post" class="needs-validation" novalidate>
+                    <form method="post" id="addCompetitiveFeesForm" class="needs-validation" novalidate>
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="fee_amount">Fee Amount:</label>
                             <input type="text" id="fee_amount" name="fee_amount" required class="form-control">
+                            <div class="invalid-feedback">Please enter a valid fee amount.</div>
                         </div>
                         <div class="form-group">
                             <label for="duration">Duration:</label>
                             <input type="text" id="duration" name="duration" required class="form-control">
+                            <div class="invalid-feedback">Please enter a valid duration.</div>
                         </div>
                         <div class="form-group">
                             <label for="subject">Subject:</label>
                             <input type="text" id="subject" name="subject" required class="form-control">
+                            <div class="invalid-feedback">Please enter a valid subject.</div>
                         </div>
                         <div class="form-group">
                             <label for="qualification">Qualification:</label>
                             <input type="text" id="qualification" name="qualification" required class="form-control">
+                            <div class="invalid-feedback">Please enter a valid qualification.</div>
                         </div>
                         <div class="form-group">
                             <label for="course">Course:</label>
@@ -47,4 +51,25 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById('addCompetitiveFeesForm').addEventListener('submit', function (event) {
+            var form = this;
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Please fill out all fields correctly.',
+                    timer: 2000
+                });
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+</script>
 {% endblock content %}

@@ -15,58 +15,67 @@
             </div>
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <h5 class="card-title">Edit Student Details</h5>
-                    <form method="post">
+                    {% comment %} <h5 class="card-title">Edit Student Details</h5> {% endcomment %}
+                    <form method="post" id="editStudentForm" class="needs-validation" novalidate>
                         {% csrf_token %}
                         <!-- Populate form fields with student details -->
                         <div class="form-group">
                             <label for="admission_number">Admission Number:</label>
-                            <input type="text" id="admission_number" name="admission_number" value="{{ student.admission_number }}" class="form-control">
+                            <input type="text" id="admission_number" name="admission_number" value="{{ student.admission_number }}" class="form-control" required>
+                            <div class="invalid-feedback">Please enter the admission number.</div>
                         </div>
                         <div class="form-group">
                             <label for="admission_date">Admission Date:</label>
-                            <!-- Update the input type to 'text' and use a placeholder -->
-                            <input type="date" id="admission_date" name="admission_date" value="{{ student.admission_date|date:'Y-m-d' }}" class="form-control">
+                            <input type="date" id="admission_date" name="admission_date" value="{{ student.admission_date|date:'Y-m-d' }}" class="form-control" required>
+                            <div class="invalid-feedback">Please select the admission date.</div>
+                            <div class="invalid-feedback" id="date-format-feedback" style="display: none;">Date must be in YYYY-MM-DD format.</div>
                         </div>
                         <div class="form-group">
                             <label for="student_name">Student Name:</label>
-                            <input type="text" id="student_name" name="student_name" value="{{ student.name }}" class="form-control">
+                            <input type="text" id="student_name" name="student_name" value="{{ student.name }}" class="form-control" required>
+                            <div class="invalid-feedback">Please enter the student name.</div>
                         </div>
                         <div class="form-group">
                             <label for="class">Class:</label>
-                            <select id="class" name="class" class="form-control">
+                            <select id="class" name="class" class="form-control" required>
                                 {% for class_name in classes %}
                                     <option value="{{ class_name }}" {% if student.student_class == class_name %} selected {% endif %}>{{ class_name }}</option>
                                 {% endfor %}
                             </select>
+                            <div class="invalid-feedback">Please select the class.</div>
                         </div>
                         <div class="form-group">
                             <label for="section">Section:</label>
-                            <input type="text" id="section" name="section" value="{{ student.section }}" class="form-control">
+                            <input type="text" id="section" name="section" value="{{ student.section }}" class="form-control" required>
+                            <div class="invalid-feedback">Please enter the section.</div>
                         </div>
                         <div class="form-group">
                             <label for="course">Course:</label>
-                            <select id="course" name="course" class="form-control">
+                            <select id="course" name="course" class="form-control" required>
                                 {% for course in courses %}
                                     <option value="{{ course }}" {% if student.course == course %} selected {% endif %}>{{ course }}</option>
                                 {% endfor %}
                             </select>
+                            <div class="invalid-feedback">Please select the course.</div>
                         </div>
                         <div class="form-group">
                             <label for="contact_number">Contact Number:</label>
-                            <input type="text" id="contact_number" name="contact_number" value="{{ student.contact_number }}" class="form-control">
+                            <input type="text" id="contact_number" name="contact_number" value="{{ student.contact_number }}" class="form-control" required pattern="\d{10,}">
+                            <div class="invalid-feedback">Please enter a valid contact number with at least 10 digits.</div>
                         </div>
                         <div class="form-group">
                             <label for="gender">Gender:</label>
-                            <select id="gender" name="gender" class="form-control">
+                            <select id="gender" name="gender" class="form-control" required>
                                 <option value="Male" {% if student.gender == 'Male' %} selected {% endif %}>Male</option>
                                 <option value="Female" {% if student.gender == 'Female' %} selected {% endif %}>Female</option>
                                 <option value="Other" {% if student.gender == 'Other' %} selected {% endif %}>Other</option>
                             </select>
+                            <div class="invalid-feedback">Please select the gender.</div>
                         </div>
                         <div class="form-group">
                             <label for="fee_amount">Course Fee:</label>
-                            <input type="text" id="fee_amount" name="fee_amount" value="{{ student.course_fee.fee_amount }}" class="form-control">
+                            <input type="text" id="fee_amount" name="fee_amount" value="{{ student.course_fee.fee_amount }}" class="form-control" required>
+                            <div class="invalid-feedback">Please enter the course fee.</div>
                         </div>
                         <!-- Add other form fields as needed -->
                         <button type="submit" class="btn btn-primary">Update</button>
@@ -96,8 +105,45 @@ $(document).ready(function(){
             }
         });
     });
+
+    // Validate contact number to have exactly 10 digits
+    $('#contact_number').on('input', function() {
+        var contactNumber = $(this).val();
+        if (contactNumber.length !== 10) {
+            $(this).addClass('is-invalid');
+            $(this).removeClass('is-valid');
+        } else {
+            $(this).removeClass('is-invalid');
+            $(this).addClass('is-valid');
+        }
+    });
+
+    // Form submission handling and validation
+    $('#editStudentForm').submit(function(event) {
+        var form = $(this)[0];
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+
+    // Admission date format validation
+    $('#editStudentForm').submit(function(event) {
+        var admissionDateInput = $('#admission_date').val();
+        if (!isValidDateFormat(admissionDateInput)) {
+            $('#admission_date').addClass('is-invalid');
+            $('#date-format-feedback').css('display', 'block');
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    });
+
+    function isValidDateFormat(dateString) {
+        var regex = /^\d{4}-\d{2}-\d{2}$/;
+        return regex.test(dateString);
+    }
 });
 </script>
-
 
 {% endblock content %}

@@ -281,3 +281,19 @@ def payment_success(request):
 
 def payment_failed(request):
     return render(request, "payment_failed.html")
+
+
+from .models import Payment
+
+def payment_report(request):
+    # Retrieve the institute ID from the session
+    institute_id = request.session.get('institute_id')
+    
+    # Retrieve associated students for the institute
+    associated_students = Student.objects.filter(institute__pk=institute_id)
+    
+    # Retrieve successful payments for the associated students
+    successful_payments = Payment.objects.filter(student__in=associated_students, payment_status=1)
+    
+    return render(request, 'institute_panel/payment_report.html', {'successful_payments': successful_payments})
+
