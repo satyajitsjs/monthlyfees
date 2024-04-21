@@ -141,5 +141,6 @@ RAZORPAY_API_SECRET = 'jYeXnLt4RVbzA0b6GnpaeOf4'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR , 'static')
+STATICFILE_DIRS = os.path.join(BASE_DIR, 'static')
