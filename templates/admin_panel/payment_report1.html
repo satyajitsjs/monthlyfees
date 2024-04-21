@@ -1,4 +1,4 @@
-{% extends "institute_panel/institute_dashboard.html" %}
+{% extends "admin_panel/admin_dashboard.html" %}
 {% block content %}
 <div class="app-main">
     <div class="app-main__outer">
@@ -9,8 +9,16 @@
                         <div class="page-title-icon">
                             <i class="pe-7s-cash icon-gradient bg-mean-fruit"></i>
                         </div>
-                        <div>Payment Report</div>
+                        <div>Student Payment Report</div>
                     </div>
+                </div>
+            </div>
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <p><strong>Institute ID:</strong> {{ institute.id }}</p>
+                    <p><strong>Institute Name:</strong> {{ institute.name }}</p>
+                    <p><strong>Institute Location:</strong> {{ institute.location }}</p>
+                    <p><strong>Institute Contact No.:</strong> {{ institute.contact_number }}</p>
                 </div>
             </div>
             <div class="main-card mb-3 card">
@@ -27,6 +35,7 @@
                                     <th>Date</th>
                                     <th>Amount</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,6 +53,9 @@
                                             {{ payment.get_payment_status_display }}
                                         </span>
                                     </td>
+                                    <td>  <!-- Action column for delete button -->
+                                        <a href="{% url 'delete_payment' payment.id %}" class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -54,6 +66,7 @@
         </div>
     </div>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -67,6 +80,9 @@
             "autoWidth": true,
         });
     });
+
+    
 </script>
+
 
 {% endblock content %}

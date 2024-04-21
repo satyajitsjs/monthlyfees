@@ -67,7 +67,9 @@ urlpatterns = [
     path('edit-competitive-fee/<int:fee_id>/', views.edit_competitive_fee, name='edit_competitive_fee'),
     path('delete-competitive-fee/<int:fee_id>/', views.delete_competitive_fee, name='delete_competitive_fee'),
     
-    
+    path('student-payment-list/', views.student_list_view, name='student_list_view'),
+    path('payment-report-view/<str:institute_id>/', views.payment_report_view, name='payment_report_view'),
+    path('delete-payment/<int:payment_id>/', views.delete_payment, name='delete_payment'),
     
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

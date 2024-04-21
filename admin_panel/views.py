@@ -342,3 +342,28 @@ def delete_competitive_fee(request, fee_id):
     fee.delete()
     messages.success(request, 'Competitive fee has been deleted successfully.')
     return redirect('view_competitive_fees')
+
+
+
+def student_list_view(request):
+    institutes = Institute.objects.all()
+    
+    for institute in institutes:
+        institute.total_students = Student.objects.filter(institute=institute).count()
+    return render(request, 'admin_panel/student_payment_list.html', {'institutes': institutes})
+
+
+from institute_panel.models import Payment
+
+def payment_report_view(request, institute_id):
+    institute = get_object_or_404(Institute, id=institute_id)
+    payments = Payment.objects.filter(institute_id=institute_id)
+    return render(request, 'admin_panel/payment_report1.html', {'institute': institute, 'payments': payments})
+
+
+def delete_payment(request, payment_id):
+    payment = get_object_or_404(Payment, pk=payment_id)
+    institute_id = payment.institute_id  # Get the institute_id associated with the payment
+    payment.delete()
+    messages.success(request, 'Payment deleted successfully.')
+    return redirect('payment_report_view', institute_id=institute_id)

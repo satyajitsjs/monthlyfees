@@ -70,12 +70,12 @@
                                 <div class="widget-content-left">
                                     <div class="btn-group">
                                         <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            {% if institute_image_url %}
+                                            {% comment %} {% if institute_image_url %}
                                                 <img width="42" class="rounded-circle" src="{{ institute_image_url }}" alt="">
                                             {% else %}
                                                 <!-- If institute image is not available, show a default image -->
                                                 <img width="42" class="rounded-circle" src="{% static 'default_user_image.jpg' %}" alt="Default Image">
-                                            {% endif %}
+                                            {% endif %} {% endcomment %}
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <!-- Dropdown menu for user options -->

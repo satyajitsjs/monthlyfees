@@ -46,10 +46,10 @@
                                 // Handle the payment success or failure and redirect accordingly
                                 if (response.razorpay_payment_id) {
                                     // Payment successful, redirect to the success URL
-                                    window.location.href = "/payment-success/";
+                                    window.location.href = "{% url 'payment_success' %}";
                                 } else {
                                     // Payment failed or canceled, redirect to the failure URL
-                                    window.location.href = "/payment-failed/";
+                                    window.location.href = "{% url 'payment_failed' %}";
                                 }
                             },
                             prefill: {
@@ -62,8 +62,9 @@
                         const rzp = new Razorpay(options);
                         rzp.open();
                     },
-                    error: function(error) {
-                        console.error("Error initiating payment:", error);
+                    error: function(xhr, status, error) {
+                        console.error("Error initiating payment:", xhr.responseText);
+                        alert("Failed to initiate payment. Please try again later.");
                     }
                 });
             });

@@ -237,18 +237,22 @@ def fee_payment_page(request):
 def show_payment_details(request):
     return JsonResponse("Hello")
 
-def pay_now(request,student_id):
-    return render(request,'payment.html')
+def pay_now(request, student_id):
+    # Redirect to the payment page for the specific student
+    return redirect('payment', student_id=student_id)
 
+from django.db.models import ObjectDoesNotExist
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.db import transaction
 
 @csrf_exempt
 def initiate_payment(request):
     if request.method == "POST":
         amount = int(request.POST["amount"]) * 100  # Amount in paise
-        
+        student_id = request.POST.get('student_id')  # Assuming student_id is sent in the POST request
 
+        # Your existing code to create the order and return the response
         client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
-
         payment_data = {
             "amount": amount,
             "currency": "INR",
@@ -257,24 +261,55 @@ def initiate_payment(request):
                 "email": "user_email@example.com",
             },
         }
-
         order = client.order.create(data=payment_data)
+
+        # Initialize success flag for payment status
+        payment_success = False
         
-        # Include key, name, description, and image in the JSON response
-        response_data = {
-            "id": order["id"],
-            "amount": order["amount"],
-            "currency": order["currency"],
-            "key": settings.RAZORPAY_API_KEY,
-            "name": "Vidya Bhaban",
-            "description": "Payment Monthly fees",
-            "image": "https://vidyabhaban.com/uploads/school_content/logo/1711654172-16878526516605c51c1f461!BAN1.jpg",  # Replace with your logo URL
-            
-        }
-        
-        return JsonResponse(response_data)
-    
-    return render(request, "payment.html")
+        # Save the payment object within a transaction block to ensure atomicity
+        with transaction.atomic():
+            # Your existing code to create a Payment object
+            payment = Payment(
+                institute_id=request.session.get('institute_id'),
+                student_id=student_id,
+                amount_paid=amount / 100,  # Convert back to rupees
+                order_id=order["id"],  # Store the order ID
+            )
+
+            try:
+                # Retrieve the course fee for the student and update the payment object
+                student = Student.objects.get(pk=student_id)
+                course_fee = student.course_fee
+                payment.course_fee = course_fee
+                
+                # Save the payment object
+                payment.save()
+                
+                # Set the flag to True if payment saving is successful
+                payment_success = True
+                
+            except ObjectDoesNotExist:
+                pass  # Handle if course fee is not found for the student
+
+        # If payment is successful, return the response with order details
+        if payment_success:
+            response_data = {
+                "id": order["id"],
+                "amount": order["amount"],
+                "currency": order["currency"],
+                "key": settings.RAZORPAY_API_KEY,
+                "name": "Vidya Bhaban",
+                "description": "Payment Monthly fees",
+                "image": "https://vidyabhaban.com/uploads/school_content/logo/1711654172-16878526516605c51c1f461!BAN1.jpg",
+            }
+
+            return JsonResponse(response_data)
+        else:
+            return HttpResponseBadRequest("Failed to initiate payment. Please try again.")
+
+    # If the request method is not POST, return a bad request response
+    return HttpResponseBadRequest("Invalid Request")
+
 
 def payment_success(request):
     return render(request, "payment_success.html")
@@ -283,17 +318,17 @@ def payment_failed(request):
     return render(request, "payment_failed.html")
 
 
+
+
 from .models import Payment
 
 def payment_report(request):
     # Retrieve the institute ID from the session
     institute_id = request.session.get('institute_id')
     
-    # Retrieve associated students for the institute
-    associated_students = Student.objects.filter(institute__pk=institute_id)
+    # Filter payments based on the institute ID
+    payments = Payment.objects.filter(institute_id=institute_id)
     
-    # Retrieve successful payments for the associated students
-    successful_payments = Payment.objects.filter(student__in=associated_students, payment_status=1)
-    
-    return render(request, 'institute_panel/payment_report.html', {'successful_payments': successful_payments})
+    context = {'payments': payments}
+    return render(request, 'institute_panel/payment_report.html', context)
 
