@@ -45,14 +45,17 @@
                   <td>{{ student.student_class }}</td>
                   <td>{{ student.section }}</td>
                   <td>{{ student.course }}</td>
-                  <td id="amount-{{ student.pk }}">{{ student.course_fee.fee_amount }}</td>
+                  <td id="amount-{{ student.pk }}">
+                    {{ student.course_fee.fee_amount }}
+                  </td>
                   <td>
-                    
                     <button
                       class="btn btn-success btn-sm pay-button"
                       id="pay-button-{{ student.pk }}"
                       data-student-id="{{ student.pk }}"
-                    >Pay Now</button>
+                    >
+                      Pay Now
+                    </button>
                   </td>
                 </tr>
                 {% endfor %}
@@ -82,65 +85,90 @@
   });
 </script>
 <script>
-  $(document).ready(function() {
-      $(".pay-button").click(function(e) {
-          e.preventDefault(); // Prevent the default form submission
-          
-          // Get the student ID from the data attribute of the clicked button
-          const studentId = $(this).data("student-id");
-          
-          // Get the amount specific to the clicked button's parent row
-          const amountText = $("#amount-" + studentId).text().trim();
-          const amount = parseInt(amountText);
-          
-          // Make an AJAX request to initiate the payment
-          $.ajax({
-              type: "POST",
-              url: "{% url 'initiate_payment' %}",
-              data: {
-                  amount: amount,
-                  student_id: studentId,  // Include the student_id in the data
-              },
-              dataType: "json",
-              beforeSend: function(xhr) {
-                  xhr.setRequestHeader("X-CSRFToken", $("[name=csrfmiddlewaretoken]").val());
-              },
-              success: function(data) {
-                  // Initialize Razorpay Checkout with the received values
-                  const options = {
-                      key: data.key,
-                      amount: data.amount,
-                      currency: data.currency,
-                      order_id: data.id,
-                      name: data.name,
-                      description: data.description,
-                      image: data.image,
-                      handler: function(response) {
-                          // Handle the payment success or failure and redirect accordingly
-                          if (response.razorpay_payment_id) {
-                              // Payment successful, display success message or change button appearance
-                              alert("Payment successful!");
-                          } else {
-                              // Payment failed or canceled, display failure message or change button appearance
-                              alert("Payment failed or canceled!");
-                          }
-                      },
-                      prefill: {
-                          name: "Customer Name",
-                          email: "customer@example.com",
-                          contact: "customer_contact",
-                      },
-                  };
+  $(document).ready(function () {
+    $(".pay-button").click(function (e) {
+      e.preventDefault(); // Prevent the default form submission
 
-                  const rzp = new Razorpay(options);
-                  rzp.open();
-              },
-              error: function(xhr, status, error) {
-                  console.error("Error initiating payment:", xhr.responseText);
-                  alert("Failed to initiate payment. Please try again later.");
+      // Get the student ID from the data attribute of the clicked button
+      const studentId = $(this).data("student-id");
+
+      // Get the amount specific to the clicked button's parent row
+      const amountText = $("#amount-" + studentId)
+        .text()
+        .trim();
+      const amount = parseInt(amountText);
+
+      // Make an AJAX request to initiate the payment
+      $.ajax({
+        type: "POST",
+        url: "{% url 'initiate_payment' %}",
+        data: {
+          amount: amount,
+        },
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader(
+            "X-CSRFToken",
+            $("[name=csrfmiddlewaretoken]").val()
+          );
+        },
+        success: function (data) {
+          // Initialize Razorpay Checkout with the received values
+          const options = {
+            key: data.key,
+            amount: data.amount,
+            currency: data.currency,
+            order_id: data.id,
+            name: data.name,
+            description: data.description,
+            image: data.image,
+            handler: function (response) {
+              // Handle the payment success or failure and redirect accordingly
+              if (response.razorpay_payment_id) {
+                $.ajax({
+                  type: "POST",
+                  url: "{% url 'payment_success' %}",
+                  data: {
+                    amount: amount,
+                    student_id: studentId, // Include the student_id in the data
+                    order_id: response.razorpay_payment_id
+                  },
+                  dataType: "json",
+                  beforeSend: function (xhr) {
+                    xhr.setRequestHeader(
+                      "X-CSRFToken",
+                      $("[name=csrfmiddlewaretoken]").val()
+                    );
+                  },
+                  success: function (data) {
+                    alert("Payment successful!");
+                  },
+                  error: function (xhr, status, error) {
+                    alert(
+                      "Failed to initiate payment. Please try again later."
+                    );
+                  },
+                });
+              } else {
+                alert("Payment failed or canceled!");
               }
-          });
+            },
+            prefill: {
+              name: "Customer Name",
+              email: "customer@example.com",
+              contact: "customer_contact",
+            },
+          };
+
+          const rzp = new Razorpay(options);
+          rzp.open();
+        },
+        error: function (xhr, status, error) {
+          // console.error("Error initiating payment:", xhr.responseText);
+          alert("Failed to initiate payment. Please try again later.");
+        },
       });
+    });
   });
 </script>
 {% endblock content %}

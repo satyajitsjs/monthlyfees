@@ -249,7 +249,6 @@ from django.db import transaction
 def initiate_payment(request):
     if request.method == "POST":
         amount = int(request.POST["amount"]) * 100  # Amount in paise
-        student_id = request.POST.get('student_id')  # Assuming student_id is sent in the POST request
 
         # Your existing code to create the order and return the response
         client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
@@ -262,34 +261,6 @@ def initiate_payment(request):
             },
         }
         order = client.order.create(data=payment_data)
-
-        # Initialize success flag for payment status
-        payment_success = False
-        
-        # Save the payment object within a transaction block to ensure atomicity
-        with transaction.atomic():
-            # Your existing code to create a Payment object
-            payment = Payment(
-                institute_id=request.session.get('institute_id'),
-                student_id=student_id,
-                amount_paid=amount / 100,  # Convert back to rupees
-                order_id=order["id"],  # Store the order ID
-            )
-
-            try:
-                # Retrieve the course fee for the student and update the payment object
-                student = Student.objects.get(pk=student_id)
-                course_fee = student.course_fee
-                payment.course_fee = course_fee
-                
-                # Save the payment object
-                payment.save()
-                
-                # Set the flag to True if payment saving is successful
-                payment_success = True
-                
-            except ObjectDoesNotExist:
-                pass  # Handle if course fee is not found for the student
 
         # If payment is successful, return the response with order details
         if payment_success:
@@ -311,8 +282,30 @@ def initiate_payment(request):
     return HttpResponseBadRequest("Invalid Request")
 
 
+@csrf_exempt
 def payment_success(request):
-    return render(request, "payment_success.html")
+    print(request.POST)
+    student_id = request.POST.get('student_id')  # Assuming student_id is sent in the POST request
+    amount = int(request.POST["amount"]) * 100  # Amount in paise
+    order_id = request.POST['order_id']
+
+
+    payment = Payment(
+        institute_id=request.session.get('institute_id'),
+        student_id=student_id,
+        amount_paid=amount / 100,  # Convert back to rupees
+        order_id=order_id
+    )
+
+    try:
+        student = Student.objects.get(pk=student_id)
+        course_fee = student.course_fee
+        payment.course_fee = course_fee
+        payment.save()
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)  # Return error with status code 500
+
+    return JsonResponse({"message": "Payment Successful"}, status=200)
 
 def payment_failed(request):
     return render(request, "payment_failed.html")
